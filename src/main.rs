@@ -155,6 +155,7 @@ fn lex(line: &str) -> Vec<Token> {
     tokens
 }
 
+/// Create expressions based off binary operation tokens
 fn binary_op_expr(binary_op: &Token, lhs: Expr, rhs: Expr) -> Expr {
     match *binary_op{
         Token::Add => Expr::Addition(Box::new(lhs), Box::new(rhs)),
@@ -165,6 +166,7 @@ fn binary_op_expr(binary_op: &Token, lhs: Expr, rhs: Expr) -> Expr {
     }
 }
 
+/// Create the internal operator precedence hierarchy
 fn op_precedence(token: &Token) -> i8 {
     match *token {
         Token::Add => 10,
@@ -175,6 +177,7 @@ fn op_precedence(token: &Token) -> i8 {
     }
 }
 
+/// Fetch a token from the token list. If there are no tokens left, produce an error
 fn get_token<'a, 'b>(tokens: &'a Vec<Token>, current_token: &'b mut usize) -> Result<&'a Token, &'static str> {
     if let Some(token) = tokens.get(*current_token){
         Ok(token)
@@ -183,6 +186,7 @@ fn get_token<'a, 'b>(tokens: &'a Vec<Token>, current_token: &'b mut usize) -> Re
     }
 }
 
+/// Consume a token -> moves to the next token
 fn eat_token(current_token: &mut usize) {
     *current_token += 1;
 }
@@ -201,11 +205,15 @@ fn parse(tokens: &Vec<Token>) -> Result<Expr, &'static str> {
     parse_expr(tokens, &mut current_token)
 }
 
+/// Parse the Left hand side (lhs) first - this will be the 'primary'.
+/// Based on the lhs, evaluate the remaining tokens on the rhs
 fn parse_expr(tokens: &Vec<Token>, current_token: &mut usize) -> Result<Expr, &'static str> {
     let lhs = parse_primary(tokens, current_token)?;
     parse_binary_ops_rhs(tokens, current_token, 0, lhs)
 }
 
+/// Checks that the primary/opening token for the expression is valid (i.e. left bracket) and sends
+/// to relevant expression parsing variants
 fn parse_primary(tokens: &Vec<Token>, current_token: &mut usize) -> Result<Expr, &'static str> {
     let token = get_token(tokens, current_token)?;
     match *token {
