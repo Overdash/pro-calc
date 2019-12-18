@@ -169,10 +169,8 @@ fn binary_op_expr(binary_op: &Token, lhs: Expr, rhs: Expr) -> Expr {
 /// Create the internal operator precedence hierarchy
 fn op_precedence(token: &Token) -> i8 {
     match *token {
-        Token::Add => 10,
-        Token::Sub => 10,
-        Token::Multi => 20,
-        Token::Div => 20,
+        Token::Add | Token::Sub => 10,
+        Token::Multi | Token::Div => 20,
         _ => -1,
     }
 }
