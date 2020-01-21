@@ -98,7 +98,7 @@ fn eval(expr: Expr) -> i64 {
 
 fn is_digit(c: &char) -> bool {
     match *c {
-        '0'...'9' => true,
+        '0'..='9' => true,
         _ => false
     }
 }
@@ -117,7 +117,7 @@ fn lex(line: &str) -> Vec<Token> {
             '/' => tokens.push(Token::Div),
             '(' => tokens.push(Token::Lbracket),
             ')' => tokens.push(Token::Rbracket),
-            '0'...'9' => {
+            '0'..='9' => {
                 // Check if this operand consists of more than one digit (e.g. 54 -> '5' & '4')
                 // If so construct entire operand using Vector
                 let mut consuming = true;
@@ -291,6 +291,6 @@ fn parse_bracket(tokens: &Vec<Token>, current_token: &mut usize) -> Result<Expr,
             eat_token(current_token); // eat right bracket
             Ok(expr)
         },
-        _ => Err("Unmatched/unclosed left bracket (parenthesis)."),
+        _ => Err("Unmatched/unclosed left bracket (parenthesis)"),
     }
 }
